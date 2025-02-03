@@ -66,7 +66,7 @@ func (k Keeper) SetPost(ctx sdk.Context, post types.Post) {
 }
 
 func (k Keeper) RemovePost(ctx sdk.Context, id uint64) {
-    storeAdapter := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
-    store := prefix.NewStore(storeAdapter, types.KeyPrefix(types.PostKey))
-    store.Delete(GetPostIDBytes(id))
+	storeAdapter := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
+	store := prefix.NewStore(storeAdapter, types.KeyPrefix(types.PostKey))
+	store.Delete(GetPostIDBytes(id))
 }
