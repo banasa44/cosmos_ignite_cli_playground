@@ -9,4 +9,4 @@ release/
 *.ign
 
 
-exampled
+/build
