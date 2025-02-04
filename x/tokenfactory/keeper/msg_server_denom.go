@@ -29,8 +29,8 @@ func (k msgServer) CreateDenom(goCtx context.Context, msg *types.MsgCreateDenom)
 		Ticker:             msg.Ticker,
 		Precision:          msg.Precision,
 		Url:                msg.Url,
+		Supply:             0,	
 		MaxSupply:          msg.MaxSupply,
-		Supply:             msg.Supply,
 		CanChangeMaxSupply: msg.CanChangeMaxSupply,
 	}
 
@@ -42,35 +42,41 @@ func (k msgServer) CreateDenom(goCtx context.Context, msg *types.MsgCreateDenom)
 }
 
 func (k msgServer) UpdateDenom(goCtx context.Context, msg *types.MsgUpdateDenom) (*types.MsgUpdateDenomResponse, error) {
-	ctx := sdk.UnwrapSDKContext(goCtx)
+    ctx := sdk.UnwrapSDKContext(goCtx)
 
-	// Check if the value exists
-	valFound, isFound := k.GetDenom(
-		ctx,
-		msg.Denom,
-	)
-	if !isFound {
-		return nil, errorsmod.Wrap(sdkerrors.ErrKeyNotFound, "index not set")
-	}
+    // Check if the value exists
+    valFound, isFound := k.GetDenom(
+        ctx,
+        msg.Denom,
+    )
+    if !isFound {
+        return nil, errorsmod.Wrap(sdkerrors.ErrKeyNotFound, "Denom to update not found")
+    }
 
-	// Checks if the msg owner is the same as the current owner
-	if msg.Owner != valFound.Owner {
-		return nil, errorsmod.Wrap(sdkerrors.ErrUnauthorized, "incorrect owner")
-	}
+    // Checks if the msg owner is the same as the current owner
+    if msg.Owner != valFound.Owner {
+        return nil, errorsmod.Wrap(sdkerrors.ErrUnauthorized, "incorrect owner")
+    }
 
-	var denom = types.Denom{
-		Owner:              msg.Owner,
-		Denom:              msg.Denom,
-		Description:        msg.Description,
-		Ticker:             msg.Ticker,
-		Precision:          msg.Precision,
-		Url:                msg.Url,
-		MaxSupply:          msg.MaxSupply,
-		Supply:             msg.Supply,
-		CanChangeMaxSupply: msg.CanChangeMaxSupply,
-	}
+    if !valFound.CanChangeMaxSupply && valFound.MaxSupply != msg.MaxSupply {
+        return nil, errorsmod.Wrap(sdkerrors.ErrUnauthorized, "cannot change maxsupply")
+    }
+    if !valFound.CanChangeMaxSupply && msg.CanChangeMaxSupply {
+        return nil, errorsmod.Wrap(sdkerrors.ErrUnauthorized, "Cannot revert change maxsupply flag")
+    }
+    var denom = types.Denom{
+        Owner:              msg.Owner,
+        Denom:              msg.Denom,
+        Description:        msg.Description,
+        Ticker:             valFound.Ticker,
+        Precision:          valFound.Precision,
+        Url:                msg.Url,
+        MaxSupply:          msg.MaxSupply,
+        Supply:             valFound.Supply,
+        CanChangeMaxSupply: msg.CanChangeMaxSupply,
+    }
 
-	k.SetDenom(ctx, denom)
+    k.SetDenom(ctx, denom)
 
-	return &types.MsgUpdateDenomResponse{}, nil
+    return &types.MsgUpdateDenomResponse{}, nil
 }
