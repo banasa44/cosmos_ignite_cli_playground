@@ -54,8 +54,11 @@ import (
 	"google.golang.org/protobuf/types/known/durationpb"
 
 	examplemodulev1 "example/api/example/example/module"
+	loanmodulev1 "example/api/example/loan/module"
 	_ "example/x/example/module" // import for side-effects
 	examplemoduletypes "example/x/example/types"
+	_ "example/x/loan/module" // import for side-effects
+	loanmoduletypes "example/x/loan/types"
 	// this line is used by starport scaffolding # stargate/app/moduleImport
 )
 
@@ -94,6 +97,7 @@ var (
 		circuittypes.ModuleName,
 		// chain modules
 		examplemoduletypes.ModuleName,
+		loanmoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
 	}
 
@@ -119,6 +123,7 @@ var (
 		ibcfeetypes.ModuleName,
 		// chain modules
 		examplemoduletypes.ModuleName,
+		loanmoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/beginBlockers
 	}
 
@@ -138,6 +143,7 @@ var (
 		ibcfeetypes.ModuleName,
 		// chain modules
 		examplemoduletypes.ModuleName,
+		loanmoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/endBlockers
 	}
 
@@ -158,6 +164,7 @@ var (
 		{Account: ibctransfertypes.ModuleName, Permissions: []string{authtypes.Minter, authtypes.Burner}},
 		{Account: ibcfeetypes.ModuleName},
 		{Account: icatypes.ModuleName},
+		{Account: loanmoduletypes.ModuleName, Permissions: []string{authtypes.Minter, authtypes.Burner, authtypes.Staking}},
 		// this line is used by starport scaffolding # stargate/app/maccPerms
 	}
 
@@ -296,6 +303,10 @@ var (
 			{
 				Name:   examplemoduletypes.ModuleName,
 				Config: appconfig.WrapAny(&examplemodulev1.Module{}),
+			},
+			{
+				Name:   loanmoduletypes.ModuleName,
+				Config: appconfig.WrapAny(&loanmodulev1.Module{}),
 			},
 			// this line is used by starport scaffolding # stargate/app/moduleConfig
 		},
