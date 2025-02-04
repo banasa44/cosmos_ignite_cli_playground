@@ -55,10 +55,13 @@ import (
 
 	examplemodulev1 "example/api/example/example/module"
 	loanmodulev1 "example/api/example/loan/module"
+	tokenfactorymodulev1 "example/api/example/tokenfactory/module"
 	_ "example/x/example/module" // import for side-effects
 	examplemoduletypes "example/x/example/types"
 	_ "example/x/loan/module" // import for side-effects
 	loanmoduletypes "example/x/loan/types"
+	_ "example/x/tokenfactory/module" // import for side-effects
+	tokenfactorymoduletypes "example/x/tokenfactory/types"
 	// this line is used by starport scaffolding # stargate/app/moduleImport
 )
 
@@ -98,6 +101,7 @@ var (
 		// chain modules
 		examplemoduletypes.ModuleName,
 		loanmoduletypes.ModuleName,
+		tokenfactorymoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
 	}
 
@@ -124,6 +128,7 @@ var (
 		// chain modules
 		examplemoduletypes.ModuleName,
 		loanmoduletypes.ModuleName,
+		tokenfactorymoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/beginBlockers
 	}
 
@@ -144,6 +149,7 @@ var (
 		// chain modules
 		examplemoduletypes.ModuleName,
 		loanmoduletypes.ModuleName,
+		tokenfactorymoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/endBlockers
 	}
 
@@ -165,6 +171,7 @@ var (
 		{Account: ibcfeetypes.ModuleName},
 		{Account: icatypes.ModuleName},
 		{Account: loanmoduletypes.ModuleName, Permissions: []string{authtypes.Minter, authtypes.Burner, authtypes.Staking}},
+		{Account: tokenfactorymoduletypes.ModuleName, Permissions: []string{authtypes.Minter, authtypes.Burner, authtypes.Staking}},
 		// this line is used by starport scaffolding # stargate/app/maccPerms
 	}
 
@@ -307,6 +314,10 @@ var (
 			{
 				Name:   loanmoduletypes.ModuleName,
 				Config: appconfig.WrapAny(&loanmodulev1.Module{}),
+			},
+			{
+				Name:   tokenfactorymoduletypes.ModuleName,
+				Config: appconfig.WrapAny(&tokenfactorymodulev1.Module{}),
 			},
 			// this line is used by starport scaffolding # stargate/app/moduleConfig
 		},

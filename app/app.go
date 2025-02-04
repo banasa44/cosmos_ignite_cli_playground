@@ -78,6 +78,7 @@ import (
 	examplemodulekeeper "example/x/example/keeper"
 	loanmodulekeeper "example/x/loan/keeper"
 
+	tokenfactorymodulekeeper "example/x/tokenfactory/keeper"
 	// this line is used by starport scaffolding # stargate/app/moduleImport
 
 	"example/docs"
@@ -143,8 +144,9 @@ type App struct {
 	ScopedICAHostKeeper       capabilitykeeper.ScopedKeeper
 	ScopedKeepers             map[string]capabilitykeeper.ScopedKeeper
 
-	ExampleKeeper examplemodulekeeper.Keeper
-	LoanKeeper    loanmodulekeeper.Keeper
+	ExampleKeeper      examplemodulekeeper.Keeper
+	LoanKeeper         loanmodulekeeper.Keeper
+	TokenfactoryKeeper tokenfactorymodulekeeper.Keeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 
 	// simulation manager
@@ -250,6 +252,7 @@ func New(
 		&app.CircuitBreakerKeeper,
 		&app.ExampleKeeper,
 		&app.LoanKeeper,
+		&app.TokenfactoryKeeper,
 		// this line is used by starport scaffolding # stargate/app/keeperDefinition
 	); err != nil {
 		panic(err)
