@@ -31,6 +31,13 @@ service Query {
     option (google.api.http).get = "/example/example/list_post";
   
   }
+
+  // Queries the module authority address
+  rpc Authority (QueryAuthorityRequest) returns (QueryAuthorityResponse) {
+    option (google.api.http).get = "/example/example/authority";
+  
+  }
+  
 }
 // QueryParamsRequest is request type for the Query/Params RPC method.
 message QueryParamsRequest {}
@@ -59,3 +66,10 @@ message QueryListPostResponse {
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
+
+// Request and response messages
+message QueryAuthorityRequest {}
+
+message QueryAuthorityResponse {
+  string address = 1;
+}
