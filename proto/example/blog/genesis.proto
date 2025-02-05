@@ -5,6 +5,9 @@ package example.blog;
 import "amino/amino.proto";
 import "gogoproto/gogo.proto";
 import "example/blog/params.proto";
+import "example/blog/post.proto";
+import "example/blog/sent_post.proto";
+import "example/blog/timeout_post.proto";
 
 option go_package = "example/x/blog/types";
 
@@ -12,7 +15,13 @@ option go_package = "example/x/blog/types";
 message GenesisState {
   
   // params defines all the parameters of the module.
-  Params params  = 1 [(gogoproto.nullable) = false, (amino.dont_omitempty) = true];
-  string port_id = 2;
+           Params      params           = 1 [(gogoproto.nullable) = false, (amino.dont_omitempty) = true];
+           string      port_id          = 2;
+  repeated Post        postList         = 3 [(gogoproto.nullable) = false] ;
+           uint64      postCount        = 4;
+  repeated SentPost    sentPostList     = 5 [(gogoproto.nullable) = false] ;
+           uint64      sentPostCount    = 6;
+  repeated TimeoutPost timeoutPostList  = 7 [(gogoproto.nullable) = false] ;
+           uint64      timeoutPostCount = 8;
 }
 
