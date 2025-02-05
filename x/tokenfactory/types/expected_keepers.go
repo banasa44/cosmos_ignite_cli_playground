@@ -15,11 +15,11 @@ type AccountKeeper interface {
 
 // BankKeeper defines the expected interface for the Bank module.
 type BankKeeper interface {
-    SendCoins(ctx context.Context, fromAddr sdk.AccAddress, toAddr sdk.AccAddress, amt sdk.Coins) error
-    MintCoins(ctx context.Context, moduleName string, amt sdk.Coins) error
-    SpendableCoins(ctx context.Context, addr sdk.AccAddress) sdk.Coins
-    GetBalance(ctx context.Context, addr sdk.AccAddress, denom string) sdk.Coin
-    GetSupply(ctx context.Context, denom string) sdk.Coin
+	SendCoins(ctx context.Context, fromAddr sdk.AccAddress, toAddr sdk.AccAddress, amt sdk.Coins) error
+	MintCoins(ctx context.Context, moduleName string, amt sdk.Coins) error
+	SpendableCoins(ctx context.Context, addr sdk.AccAddress) sdk.Coins
+	GetBalance(ctx context.Context, addr sdk.AccAddress, denom string) sdk.Coin
+	GetSupply(ctx context.Context, denom string) sdk.Coin
 }
 
 // ParamSubspace defines the expected Subspace interface for parameters.

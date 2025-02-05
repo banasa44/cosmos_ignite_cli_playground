@@ -53,9 +53,12 @@ import (
 	ibcexported "github.com/cosmos/ibc-go/v8/modules/core/exported"
 	"google.golang.org/protobuf/types/known/durationpb"
 
+	blogmodulev1 "example/api/example/blog/module"
 	examplemodulev1 "example/api/example/example/module"
 	loanmodulev1 "example/api/example/loan/module"
 	tokenfactorymodulev1 "example/api/example/tokenfactory/module"
+	_ "example/x/blog/module" // import for side-effects
+	blogmoduletypes "example/x/blog/types"
 	_ "example/x/example/module" // import for side-effects
 	examplemoduletypes "example/x/example/types"
 	_ "example/x/loan/module" // import for side-effects
@@ -102,6 +105,7 @@ var (
 		examplemoduletypes.ModuleName,
 		loanmoduletypes.ModuleName,
 		tokenfactorymoduletypes.ModuleName,
+		blogmoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
 	}
 
@@ -129,6 +133,7 @@ var (
 		examplemoduletypes.ModuleName,
 		loanmoduletypes.ModuleName,
 		tokenfactorymoduletypes.ModuleName,
+		blogmoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/beginBlockers
 	}
 
@@ -150,6 +155,7 @@ var (
 		examplemoduletypes.ModuleName,
 		loanmoduletypes.ModuleName,
 		tokenfactorymoduletypes.ModuleName,
+		blogmoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/endBlockers
 	}
 
@@ -318,6 +324,10 @@ var (
 			{
 				Name:   tokenfactorymoduletypes.ModuleName,
 				Config: appconfig.WrapAny(&tokenfactorymodulev1.Module{}),
+			},
+			{
+				Name:   blogmoduletypes.ModuleName,
+				Config: appconfig.WrapAny(&blogmodulev1.Module{}),
 			},
 			// this line is used by starport scaffolding # stargate/app/moduleConfig
 		},

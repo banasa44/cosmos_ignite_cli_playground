@@ -78,7 +78,9 @@ import (
 	examplemodulekeeper "example/x/example/keeper"
 	loanmodulekeeper "example/x/loan/keeper"
 
+	blogmodulekeeper "example/x/blog/keeper"
 	tokenfactorymodulekeeper "example/x/tokenfactory/keeper"
+
 	// this line is used by starport scaffolding # stargate/app/moduleImport
 
 	"example/docs"
@@ -147,6 +149,7 @@ type App struct {
 	ExampleKeeper      examplemodulekeeper.Keeper
 	LoanKeeper         loanmodulekeeper.Keeper
 	TokenfactoryKeeper tokenfactorymodulekeeper.Keeper
+	BlogKeeper         blogmodulekeeper.Keeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 
 	// simulation manager
@@ -253,6 +256,7 @@ func New(
 		&app.ExampleKeeper,
 		&app.LoanKeeper,
 		&app.TokenfactoryKeeper,
+		&app.BlogKeeper,
 		// this line is used by starport scaffolding # stargate/app/keeperDefinition
 	); err != nil {
 		panic(err)
