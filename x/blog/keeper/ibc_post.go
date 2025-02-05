@@ -37,48 +37,48 @@ func (k Keeper) TransmitIbcPostPacket(
 
 // OnRecvIbcPostPacket processes packet reception
 func (k Keeper) OnRecvIbcPostPacket(ctx sdk.Context, packet channeltypes.Packet, data types.IbcPostPacketData) (packetAck types.IbcPostPacketAck, err error) {
-	// validate packet data upon receiving
-	if err := data.ValidateBasic(); err != nil {
-		return packetAck, err
-	}
-
-	// TODO: packet reception logic
-
-	return packetAck, nil
+    packetAck.PostId = k.AppendPost(ctx, types.Post{
+		Title:   data.Title,
+		Content: data.Content,
+	})
+    return packetAck, nil
 }
 
 // OnAcknowledgementIbcPostPacket responds to the success or failure of a packet
 // acknowledgement written on the receiving chain.
 func (k Keeper) OnAcknowledgementIbcPostPacket(ctx sdk.Context, packet channeltypes.Packet, data types.IbcPostPacketData, ack channeltypes.Acknowledgement) error {
-	switch dispatchedAck := ack.Response.(type) {
-	case *channeltypes.Acknowledgement_Error:
+    switch dispatchedAck := ack.Response.(type) {
+    case *channeltypes.Acknowledgement_Error:
+        // Ignore acknowledgment errors for now
+        return nil
+    case *channeltypes.Acknowledgement_Result:
+        // Decode the acknowledgment response
+        var packetAck types.IbcPostPacketAck
+        if err := types.ModuleCdc.UnmarshalJSON(dispatchedAck.Result, &packetAck); err != nil {
+            return errors.New("cannot unmarshal acknowledgment")
+        }
 
-		// TODO: failed acknowledgement logic
-		_ = dispatchedAck.Error
+        // Generate a new SentPost ID using an AppendSentPost function
+        k.AppendSentPost(ctx, types.SentPost{
+            PostId: packetAck.PostId,
+            Title:  data.Title,
+            Chain:  packet.DestinationPort + "-" + packet.DestinationChannel,
+        })
 
-		return nil
-	case *channeltypes.Acknowledgement_Result:
-		// Decode the packet acknowledgment
-		var packetAck types.IbcPostPacketAck
-
-		if err := types.ModuleCdc.UnmarshalJSON(dispatchedAck.Result, &packetAck); err != nil {
-			// The counter-party module doesn't implement the correct acknowledgment format
-			return errors.New("cannot unmarshal acknowledgment")
-		}
-
-		// TODO: successful acknowledgement logic
-
-		return nil
-	default:
-		// The counter-party module doesn't implement the correct acknowledgment format
-		return errors.New("invalid acknowledgment format")
-	}
+        return nil
+    default:
+        return errors.New("counterparty module does not implement the correct acknowledgment format")
+    }
 }
 
 // OnTimeoutIbcPostPacket responds to the case where a packet has not been transmitted because of a timeout
 func (k Keeper) OnTimeoutIbcPostPacket(ctx sdk.Context, packet channeltypes.Packet, data types.IbcPostPacketData) error {
 
-	// TODO: packet timeout logic
+	k.AppendTimeoutPost(ctx,types.TimeoutPost{
+		Title: data.Title,
+		Chain: packet.DestinationPort + "-" + packet.DestinationChannel,
+		Creator: data.Creator,
+	},)
 
 	return nil
 }
